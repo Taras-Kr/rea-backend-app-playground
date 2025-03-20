@@ -115,6 +115,9 @@ export class UserTypesService {
     return new ApiResponse(resp, 'Success', HttpStatus.OK);
   }
 
+  git;
+  checkout;
+
   async restore(uuid: string) {
     if (!validate(uuid)) {
       throw new UnprocessableEntityException('Invalid uuid');
