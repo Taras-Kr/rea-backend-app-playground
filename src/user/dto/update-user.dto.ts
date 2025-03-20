@@ -1,5 +1,5 @@
 import { IsEmail, IsIn, IsOptional, Length, MaxLength } from 'class-validator';
-import { UserRole } from '../enum/user-role';
+import { UserRoles } from '../enum/user-roles';
 
 export class UpdateUserDto {
   // @IsOptional()
@@ -14,11 +14,7 @@ export class UpdateUserDto {
   @IsEmail()
   email: string;
 
-  @IsOptional()
-  @IsIn(['user', 'agent'])
-  type: 'user' | 'agent';
+  type_uuid: 'user' | 'agent';
 
-  @IsOptional()
-  @IsIn(['owner', 'admin', 'agent', 'user'])
-  roles: UserRole;
+  role_uuid: UserRoles;
 }

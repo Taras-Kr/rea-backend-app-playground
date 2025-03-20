@@ -1,15 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
 import {
   DocumentBuilder,
   SwaggerCustomOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import { ResponseInterceptor } from './common/interseptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('v1/api');
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('Real Estate Agency')
@@ -24,6 +30,8 @@ async function bootstrap() {
     customSiteTitle: 'Real Estate Agency',
   };
   SwaggerModule.setup('swagger', app, documentFactory, swaggerOptions);
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(process.env.PORT ?? 3001);
 }

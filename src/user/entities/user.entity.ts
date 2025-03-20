@@ -1,19 +1,11 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import { UserRole } from '../enum/user-role';
+import { BaseEntity } from '../../entities/base.entity';
+import { UserType } from '../../handbooks/user-type/entities/user-type.entity';
+import { UserRole } from '../../handbooks/user-role/entities/user-role.entity';
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  uuid: string;
-
+@Entity({ name: 'users' })
+export class User extends BaseEntity {
   @Column()
   name: string;
 
@@ -23,25 +15,20 @@ export class User {
   @Column()
   email: string;
 
-  @Column({
-    select: false,
-  })
+  @Column({ select: false })
   password: string;
 
-  @Column({ default: 'user' })
-  type: 'user' | 'agent';
+  @Column({ type: 'uuid' }) // Додаємо збереження UUID
+  type_uuid: string;
 
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.USER,
-  })
-  roles: UserRole;
+  @ManyToOne(() => UserType)
+  @JoinColumn({ name: 'type_uuid', referencedColumnName: 'uuid' })
+  type: UserType;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-  @DeleteDateColumn({ name: 'deleted_at', select: false })
-  deletedAt: Date;
+  @ManyToOne(() => UserRole)
+  @JoinColumn({ name: 'role_uuid', referencedColumnName: 'uuid' })
+  role: UserRole;
+
+  @Column({ type: 'uuid' }) // Додаємо збереження UUID
+  role_uuid: string;
 }

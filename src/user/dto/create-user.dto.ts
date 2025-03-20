@@ -1,8 +1,6 @@
-import { UserRole } from '../enum/user-role';
 import {
   IsDefined,
   IsEmail,
-  IsIn,
   IsNotEmpty,
   IsOptional,
   Length,
@@ -41,15 +39,9 @@ export class CreateUserDto {
   @ApiProperty({
     required: false,
   })
-  @IsOptional()
-  @IsIn(['user', 'agent'])
-  type: 'user' | 'agent';
-
+  type_uuid: string;
   @ApiProperty({
-    enum: UserRole,
     required: false,
   })
-  @IsOptional()
-  @IsIn(['owner', 'admin', 'agent', 'user'])
-  roles: UserRole;
+  role_uuid: string;
 }

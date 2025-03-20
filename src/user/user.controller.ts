@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtCookieAuthGuard } from '../common/guards/jwtCookieAuth.guard';
 
 @ApiTags('Користувачі')
 @Controller('users')
@@ -30,6 +32,7 @@ export class UserController {
     return this.userService.findAllDeleted();
   }
 
+  @UseGuards(JwtCookieAuthGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
