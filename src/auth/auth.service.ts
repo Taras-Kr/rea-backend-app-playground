@@ -49,7 +49,7 @@ export class AuthService {
 
     response.cookie('access_token', tokens.access_token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'none',
       expires: expiresAccessToken,
       path: '/',
@@ -62,7 +62,7 @@ export class AuthService {
     //How and where correct store refresh token
     response.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'none',
       expires: expiresRefreshToken,
       path: '/',
