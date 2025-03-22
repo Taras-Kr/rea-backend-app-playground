@@ -85,7 +85,10 @@ export class AuthService {
   }
 
   async getTokens(user: User) {
+    console.log('*************User from get Token*************');
     console.log('User from get Token', user);
+    console.log('*******************');
+
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -126,8 +129,14 @@ export class AuthService {
   }
 
   async profile(@Req() request: Request) {
-    const user = request.user;
+    console.log('***********Request*************');
+    console.log('Request', request);
+    console.log('************************');
 
+    const user = request.user;
+    console.log('**********User from Request*********');
+    console.log('Profile:', user);
+    console.log('**********************');
     if (!user) {
       return new ProfileResponse(
         user,
