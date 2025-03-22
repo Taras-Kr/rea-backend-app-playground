@@ -12,8 +12,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('v1/api');
   app.enableCors({
-    origin: 'http://localhost:3000',
-    // origin: 'https://real-estate-tnhn.onrender.com',
+    // origin: 'http://localhost:3000',
+    origin: 'https://real-estate-tnhn.onrender.com',
     credentials: true,
   });
   app.use(cookieParser());
