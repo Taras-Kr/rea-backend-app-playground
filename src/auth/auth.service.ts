@@ -52,6 +52,7 @@ export class AuthService {
       secure: false,
       sameSite: 'none',
       expires: expiresAccessToken,
+      path: '/',
     });
 
     const expiresRefreshToken: Date = new Date(
@@ -64,6 +65,7 @@ export class AuthService {
       secure: false,
       sameSite: 'none',
       expires: expiresRefreshToken,
+      path: '/',
     });
 
     delete res_user.password;
