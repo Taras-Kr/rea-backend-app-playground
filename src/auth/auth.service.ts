@@ -50,6 +50,7 @@ export class AuthService {
     response.cookie('access_token', tokens.access_token, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
       expires: expiresAccessToken,
     });
 
@@ -61,6 +62,7 @@ export class AuthService {
     response.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
       expires: expiresRefreshToken,
     });
 
