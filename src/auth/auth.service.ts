@@ -46,8 +46,7 @@ export class AuthService {
       new Date().getTime() +
         parseInt(this.configService.get<string>('JWT_ACCESS_EXPIRESIN')),
     );
-
-    response.cookie('access_token', tokens.access_token, {
+    response.cookie('refresh_token', tokens.access_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
