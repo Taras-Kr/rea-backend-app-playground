@@ -78,7 +78,6 @@ export class UserService {
     });
 
     await this.userRepository.save(createdUser);
-    console.log('Created', createdUser);
     delete createdUser.password;
     return createdUser;
   }
@@ -214,11 +213,6 @@ export class UserService {
     }
     await this.userRepository.restore(uuid);
     return new ApiResponse({ uuid: uuid }, 'Restored', HttpStatus.OK);
-    // return {
-    //   uuid: uuid,
-    //   message: 'Restored',
-    //   statusCode: 200,
-    // };
   }
 
   async update(uuid: string, updateUserDto: UpdateUserDto) {
@@ -233,18 +227,7 @@ export class UserService {
       throw new NotFoundException('User with ${uuid} not found');
     }
 
-    // if (updateUserDto.type === 'user' && updateUserDto.role !== 'user') {
-    //   throw new UnprocessableEntityException(
-    //     `User with type \'${updateUserDto.type}\' and \'${updateUserDto.role}\' role is not allowed`,
-    //   );
-    // }
-
     await this.userRepository.update(uuid, updateUserDto);
     return { uuid: uuid };
-    // return {
-    //   uuid: uuid,
-    //   message: 'User updated successfully.',
-    //   statusCode: 200,
-    // };
   }
 }

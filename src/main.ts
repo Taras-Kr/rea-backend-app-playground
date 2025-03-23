@@ -7,13 +7,15 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import { ResponseInterceptor } from './common/interseptors/response.interceptor';
+import * as process from 'node:process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('v1/api');
   app.enableCors({
     // origin: 'http://localhost:3000',
-    origin: 'https://real-estate-tnhn.onrender.com',
+    origin: process.env.CLIENT_HOST,
+    // origin: 'https://real-estate-tnhn.onrender.com',
     credentials: true,
   });
   app.use(cookieParser());
@@ -34,7 +36,6 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  console.log('HTTP Adapter:', app.getHttpAdapter().getType());
   await app.listen(process.env.PORT ?? 3001);
 }
 
