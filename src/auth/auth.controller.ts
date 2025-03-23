@@ -14,6 +14,7 @@ import { Request, Response } from 'express';
 import { RefreshTokenGuard } from '../common/guards/refreshToken.guard';
 import { LocalAuthGuard } from '../common/guards/local-auth.guard';
 import { JwtCookieAuthGuard } from '../common/guards/jwtCookieAuth.guard';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -34,8 +35,8 @@ export class AuthController {
     return this.authService.logout(userUUID, response);
   }
 
-  // @UseGuards(AccessTokenGuard)
-  @UseGuards(JwtCookieAuthGuard)
+  @UseGuards(AccessTokenGuard)
+  // @UseGuards(JwtCookieAuthGuard)
   @Get('profile')
   profile(@Req() request: Request) {
     return this.authService.profile(request);
