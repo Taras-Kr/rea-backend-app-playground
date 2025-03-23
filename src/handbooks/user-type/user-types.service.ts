@@ -68,7 +68,6 @@ export class UserTypesService {
       ],
     });
 
-    console.log('UserType', userType);
     if (userType && userType.uuid !== uuid) {
       throw new UnprocessableEntityException(
         'Запис з такими типом та/або назвою вже існує',
@@ -138,7 +137,6 @@ export class UserTypesService {
     if (role_title) {
       where['title'] = role_title;
     }
-    console.log('where', where);
     if (Object.keys(where).length === 0) {
       return await this.userTypeRepository.find();
     }
@@ -166,7 +164,6 @@ export class UserTypesService {
     if (type_title) {
       where['title'] = type_title;
     }
-    console.log('where', where);
     if (Object.keys(where).length === 0) {
       return await this.userTypeRepository.find();
     }

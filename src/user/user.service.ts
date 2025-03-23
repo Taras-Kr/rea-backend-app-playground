@@ -132,8 +132,6 @@ export class UserService {
       relations: ['type', 'role'],
     });
 
-    console.log('User from findByEmail', user);
-
     if (!user) {
       //Change message something like "Unavailable credentials"
       throw new UnauthorizedException(`Email or password is incorrect`);

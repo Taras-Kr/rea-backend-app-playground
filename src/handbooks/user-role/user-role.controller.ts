@@ -38,9 +38,6 @@ export class UserRoleController {
     @Query('type') type_name?: string,
     @Query('type_title') type_title?: string,
   ) {
-    console.log('typeUUID:', typeUuid);
-    console.log('type:', type_name);
-
     return this.userRoleService.findByType({ typeUuid, type_name, type_title });
   }
 

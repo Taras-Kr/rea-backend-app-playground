@@ -179,8 +179,6 @@ export class UserRoleService {
       ],
     });
 
-    // return roles;
-    // console.log(roles);
     return roles.map((role) => ({
       ...role,
       type_title: role.type.title,

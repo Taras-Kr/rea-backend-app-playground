@@ -30,7 +30,6 @@ export class AuthController {
     if (!request.user || !request.user['sub']) {
       throw new UnauthorizedException('Користувач не автентифікований');
     }
-    console.log('User:', request.user['sub']);
     const userUUID = request.user['sub'];
     return this.authService.logout(userUUID, response);
   }
@@ -54,6 +53,6 @@ export class AuthController {
     @Body() data: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.authService.login(data, res);
+    return await this.authService.login(data);
   }
 }
