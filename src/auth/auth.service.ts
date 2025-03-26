@@ -38,34 +38,10 @@ export class AuthService {
     return result;
   }
 
-  async login(data: AuthDto, response: Response) {
+  async login(data: AuthDto) {
     const res_user = await this.userService.findOneByEmail(data.email);
     const tokens = await this.getTokens(res_user);
 
-    // const expiresAccessToken: Date = new Date(
-    //   new Date().getTime() +
-    //     parseInt(this.configService.get<string>('JWT_ACCESS_EXPIRESIN')),
-    // );
-    // response.cookie('access_token', tokens.access_token, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: 'none',
-    //   expires: expiresAccessToken,
-    //   path: '/',
-    // });
-
-    // const expiresRefreshToken: Date = new Date(
-    //   new Date().getTime() +
-    //     parseInt(this.configService.get<string>('JWT_REFRESH_EXPIRESIN')),
-    // );
-    //How and where correct store refresh token
-    // response.cookie('refresh_token', tokens.refresh_token, {
-    //   httpOnly: true,
-    //   secure: true,
-    //   sameSite: 'none',
-    //   expires: expiresRefreshToken,
-    //   path: '/',
-    // });
     const res = {
       ...res_user,
       access_token: tokens.access_token,
@@ -93,10 +69,6 @@ export class AuthService {
   }
 
   async getTokens(user: User) {
-    console.log('*************User from get Token*************');
-    console.log('User from get Token', user);
-    console.log('*******************');
-
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -137,20 +109,11 @@ export class AuthService {
   }
 
   async profile(@Req() request: Request) {
-    console.log('***********Request*************');
-    console.log('Request', request);
-    console.log('************************');
-
     const user = request.user;
-    console.log('**********User from Request*********');
-    console.log('Profile:', user);
-    console.log('**********************');
     let access_token = request.headers.authorization;
-    console.log('Token Header', access_token, request.headers.authorization);
     if (access_token) {
       access_token = access_token.replace('Bearer ', '');
     }
-    console.log('profile access_token:', access_token);
 
     if (!user) {
       return new ProfileResponse(

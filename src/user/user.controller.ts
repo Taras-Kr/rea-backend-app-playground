@@ -15,8 +15,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtCookieAuthGuard } from '../common/guards/jwtCookieAuth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @ApiTags('Користувачі')
+@UseGuards(RolesGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -27,32 +30,38 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Roles('admin', 'owner', 'agent')
   @Get('archive')
   findAllArchive() {
     return this.userService.findAllDeleted();
   }
 
-  @UseGuards(JwtCookieAuthGuard)
+  // @UseGuards(JwtCookieAuthGuard)
+  @Roles('admin', 'owner', 'agent')
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
+  @Roles('admin', 'owner', 'agent')
   @Get(':uuid')
   findOne(@Param('uuid') uuid: string) {
     return this.userService.findOne(uuid);
   }
 
+  @Roles('admin', 'owner')
   @Delete(':uuid')
   delete(@Param('uuid') uuid: string) {
     return this.userService.delete(uuid);
   }
 
+  @Roles('admin', 'owner')
   @Put('archive/:uuid')
   restore(@Param('uuid') uuid: string) {
     return this.userService.restore(uuid);
   }
 
+  @Roles('admin', 'owner')
   @Put(':uuid')
   update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(uuid, updateUserDto);

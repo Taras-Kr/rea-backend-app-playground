@@ -9,6 +9,7 @@ import { UserType } from '../handbooks/user-type/entities/user-type.entity';
 import { UserRole } from '../handbooks/user-role/entities/user-role.entity';
 import { UserRoleService } from '../handbooks/user-role/user-role.service';
 import { UserTypesService } from '../handbooks/user-type/user-types.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserType, UserRole])],
@@ -18,6 +19,7 @@ import { UserTypesService } from '../handbooks/user-type/user-types.service';
     JwtCookieAuthGuard,
     UserTypesService,
     UserRoleService,
+    ConfigService,
   ],
   controllers: [UserController],
   exports: [UserService],
