@@ -14,7 +14,6 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtCookieAuthGuard } from '../common/guards/jwtCookieAuth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 
@@ -37,14 +36,15 @@ export class UserController {
   }
 
   // @UseGuards(JwtCookieAuthGuard)
-  @Roles('admin', 'owner', 'agent')
   @Get()
+  @Roles('admin', 'owner', 'agent')
   findAll() {
     return this.userService.findAll();
   }
 
-  @Roles('admin', 'owner', 'agent')
+
   @Get(':uuid')
+  @Roles('admin', 'owner', 'agent')
   findOne(@Param('uuid') uuid: string) {
     return this.userService.findOne(uuid);
   }
