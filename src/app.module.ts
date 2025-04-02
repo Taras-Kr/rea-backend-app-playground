@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UserTypeModule } from './handbooks/user-type/user-type.module';
 import { UserRoleModule } from './handbooks/user-role/user-role.module';
+import { CurrencyModule } from './handbooks/currency/currency.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserRoleModule } from './handbooks/user-role/user-role.module';
     AuthModule,
     UserTypeModule,
     UserRoleModule,
+    CurrencyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
