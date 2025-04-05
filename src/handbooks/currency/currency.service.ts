@@ -4,12 +4,13 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { validate as validateUUID } from 'uuid';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { Currency } from './entities/create-currency.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
+import { validateUUIDFormat } from '../../common/utils/uuid.utils';
+import { throwUnprocessable } from '../../common/exceptions/error-handler';
 
 @Injectable()
 export class CurrencyService {
@@ -27,8 +28,24 @@ export class CurrencyService {
       ],
     });
     if (existingCurrency) {
-      throw new UnprocessableEntityException(
-        'Запис із такою назвою та/або кодом та/або символом вже існує',
+      throwUnprocessable(
+        'Валюта із такою назвою та/або кодом та/або символом вже існує',
+        'active_exists',
+      );
+    }
+    const existingDeletedCurrency = await this.currencyRepository.find({
+      withDeleted: true,
+      where: [
+        { name: createCurrencyDto.name, createdAt: Not(IsNull()) },
+        { code: createCurrencyDto.code, createdAt: Not(IsNull()) },
+        { symbol: createCurrencyDto.symbol, createdAt: Not(IsNull()) },
+      ],
+    });
+
+    if (existingDeletedCurrency) {
+      throwUnprocessable(
+        'Валюта із такою назвою та/або кодом та/або символом існує серед видалених',
+        'deleted_exists',
       );
     }
     try {
@@ -43,9 +60,7 @@ export class CurrencyService {
   }
 
   async findOne(uuid: string) {
-    if (!validateUUID(uuid)) {
-      throw new UnprocessableEntityException('Incorrect UUID');
-    }
+    validateUUIDFormat(uuid);
     const existingCurrency = await this.currencyRepository.findOne({
       where: { uuid: uuid },
     });
@@ -58,9 +73,7 @@ export class CurrencyService {
   }
 
   async update(uuid: string, updateCurrencyDto: UpdateCurrencyDto) {
-    if (!validateUUID(uuid)) {
-      throw new UnprocessableEntityException('Incorrect UUID');
-    }
+    validateUUIDFormat(uuid);
     if (!updateCurrencyDto) {
       throw new BadRequestException();
     }
@@ -79,11 +92,10 @@ export class CurrencyService {
         { code: updateCurrencyDto.code, uuid: Not(uuid) },
       ],
     });
-    console.log('duplicate:', duplicatedCurrencies);
 
     if (duplicatedCurrencies.length !== 0) {
       throw new UnprocessableEntityException(
-        'Запис із такою назвою та/або кодом та/або символом вже існує',
+        'Валюта із такою назвою та/або кодом та/або символом вже існує',
       );
     }
 
@@ -92,9 +104,7 @@ export class CurrencyService {
   }
 
   async softDelete(uuid: string) {
-    if (!validateUUID(uuid)) {
-      throw new UnprocessableEntityException('Incorrect UUID');
-    }
+    validateUUIDFormat(uuid);
     const existingCurrency = await this.currencyRepository.findOne({
       where: { uuid: uuid },
     });
@@ -106,9 +116,7 @@ export class CurrencyService {
   }
 
   async restore(uuid: string) {
-    if (!validateUUID(uuid)) {
-      throw new UnprocessableEntityException('Incorrect UUID');
-    }
+    validateUUIDFormat(uuid);
     const existingCurrency = await this.currencyRepository.findOne({
       withDeleted: true,
       where: { uuid: uuid },
@@ -150,7 +158,7 @@ export class CurrencyService {
       ],
     });
     if (deletedItems.length === 0) {
-      throw new NotFoundException(`Deleted items not found`);
+      throw new NotFoundException(`записи відсутні`);
     }
     return deletedItems;
   }
