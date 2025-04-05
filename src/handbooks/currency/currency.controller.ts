@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe,
   HttpStatus,
   Put,
 } from '@nestjs/common';
@@ -14,13 +13,14 @@ import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 
 @Controller('handbooks/currencies')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
-  @UsePipes(new ValidationPipe())
   @Post()
+  @UsePipes(new CustomValidationPipe())
   create(@Body() createCurrencyDto: CreateCurrencyDto) {
     return this.currencyService.create(createCurrencyDto);
   }
@@ -40,8 +40,8 @@ export class CurrencyController {
     return this.currencyService.findOne(uuid);
   }
 
-  @UsePipes(new ValidationPipe())
   @Put(':uuid')
+  @UsePipes(new CustomValidationPipe())
   async update(
     @Param('uuid') uuid: string,
     @Body() updateCurrencyDto: UpdateCurrencyDto,
