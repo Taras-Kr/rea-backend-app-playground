@@ -33,7 +33,7 @@ export class CurrencyService {
         'active_exists',
       );
     }
-    const existingDeletedCurrency = await this.currencyRepository.find({
+    const existingDeletedCurrency = await this.currencyRepository.findOne({
       withDeleted: true,
       where: [
         { name: createCurrencyDto.name, createdAt: Not(IsNull()) },
@@ -41,7 +41,7 @@ export class CurrencyService {
         { symbol: createCurrencyDto.symbol, createdAt: Not(IsNull()) },
       ],
     });
-
+    console.log('existingDeletedCurrency: ', existingDeletedCurrency);
     if (existingDeletedCurrency) {
       throwUnprocessable(
         'Валюта із такою назвою та/або кодом та/або символом існує серед видалених',
@@ -158,7 +158,7 @@ export class CurrencyService {
       ],
     });
     if (deletedItems.length === 0) {
-      throw new NotFoundException(`записи відсутні`);
+      throw new NotFoundException(`Записи відсутні`);
     }
     return deletedItems;
   }
