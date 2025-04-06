@@ -42,7 +42,6 @@ export class UserController {
     return this.userService.findAll();
   }
 
-
   @Get(':uuid')
   @Roles('admin', 'owner', 'agent')
   findOne(@Param('uuid') uuid: string) {
