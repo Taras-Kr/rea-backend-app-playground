@@ -9,6 +9,7 @@ import { UserTypeModule } from './handbooks/user-type/user-type.module';
 import { UserRoleModule } from './handbooks/user-role/user-role.module';
 import { CurrencyModule } from './handbooks/currency/currency.module';
 import { PropertyCategoryModule } from './handbooks/property-category/property-category.module';
+import { PropertyTypeModule } from './handbooks/property-type/property-type.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PropertyCategoryModule } from './handbooks/property-category/property-c
     UserRoleModule,
     CurrencyModule,
     PropertyCategoryModule,
+    PropertyTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

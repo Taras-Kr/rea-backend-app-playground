@@ -120,17 +120,13 @@ export class PropertyCategoryService {
   }
 
   async findDeletedAll() {
-    const deletedItems = await this.propertyCategoryRepository.find({
+    return await this.propertyCategoryRepository.find({
       withDeleted: true,
       where: {
         deletedAt: Not(IsNull()),
       },
       select: ['uuid', 'name', 'slug', 'createdAt', 'updatedAt', 'deletedAt'],
     });
-    if (deletedItems.length === 0) {
-      throw new NotFoundException('Записи відсутні');
-    }
-    return deletedItems;
   }
 
   async restore(uuid: string) {

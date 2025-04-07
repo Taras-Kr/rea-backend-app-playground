@@ -41,7 +41,6 @@ export class CurrencyService {
         { symbol: createCurrencyDto.symbol, createdAt: Not(IsNull()) },
       ],
     });
-    console.log('existingDeletedCurrency: ', existingDeletedCurrency);
     if (existingDeletedCurrency) {
       throwUnprocessable(
         'Валюта із такою назвою та/або кодом та/або символом існує серед видалених',
