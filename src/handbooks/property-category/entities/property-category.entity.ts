@@ -1,7 +1,8 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../entities/base.entity';
 import slugify from 'slugify';
 import { IsNotEmpty, MaxLength } from 'class-validator';
+import { PropertyType } from '../../property-type/entities/property-type.entity';
 
 @Entity({ name: 'property-categories' })
 export class PropertyCategory extends BaseEntity {
@@ -16,6 +17,9 @@ export class PropertyCategory extends BaseEntity {
 
   @Column('varchar', { name: 'slug', nullable: false, length: 100 })
   slug: string;
+
+  @OneToMany(() => PropertyType, (propertyType) => propertyType.category)
+  propertyTypes: PropertyType[];
 
   @BeforeInsert()
   @BeforeUpdate()

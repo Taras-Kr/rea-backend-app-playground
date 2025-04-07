@@ -82,8 +82,6 @@ export const SwaggerGetArchive = ({
   applyDecorators(
     ApiOperation({ description, summary }),
     ApiResponse({ status: 200, example: example200 }),
-    ApiResponse({ status: 400, example: errorResponse.incorrectUUId400 }),
-    ApiResponse({ status: 404, example: errorResponse.recordsNotFound404 }),
   );
 
 export const SwaggerCreate = ({
@@ -99,7 +97,6 @@ export const SwaggerCreate = ({
   },
   example422 = {
     message: 'Запис вже існує',
-    status: 'active_exists',
     error: 'Unprocessable Entity',
     statusCode: 422,
   },
