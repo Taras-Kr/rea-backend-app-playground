@@ -109,6 +109,9 @@ export class PropertyTypeService {
     }
 
     try {
+      await this.propertyCategoryService.findOne(
+        updatePropertyTypeDto.category_uuid,
+      );
     } catch (error) {
       throwUnprocessable('Категорії з таким ідентифікатором не знайдено');
     }

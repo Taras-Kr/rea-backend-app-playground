@@ -10,10 +10,14 @@ import { UserRoleModule } from './handbooks/user-role/user-role.module';
 import { CurrencyModule } from './handbooks/currency/currency.module';
 import { PropertyCategoryModule } from './handbooks/property-category/property-category.module';
 import { PropertyTypeModule } from './handbooks/property-type/property-type.module';
+import { LocationModule } from './location/location.module';
+import { GeocodingModule } from './geocoding/geocoding.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -36,6 +40,8 @@ import { PropertyTypeModule } from './handbooks/property-type/property-type.modu
     CurrencyModule,
     PropertyCategoryModule,
     PropertyTypeModule,
+    LocationModule,
+    GeocodingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -25,6 +25,7 @@ import {
   SwaggerUpdate,
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
+import { validateUUIDFormat } from '../../common/utils/uuid.utils';
 
 @ApiTags('Довідник типів нерухомості')
 @Controller('handbooks/property-types')
