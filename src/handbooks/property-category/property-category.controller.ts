@@ -86,7 +86,7 @@ export class PropertyCategoryController {
 
   @Put('archive/:uuid')
   @SwaggerRestore({
-    description: "Поновлення з архіву категорію об'єкта нерухомості за UUID",
+    description: "Поновлення з архіву категорії об'єкта нерухомості за UUID",
     summary:
       "Поновлення з архіву категорії об'єкта нерухомості після м'якого видалення",
   })
