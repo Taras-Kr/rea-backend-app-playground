@@ -63,8 +63,8 @@ export const SwaggerGet = ({
     message: 'Success',
     statusCode: 200,
   },
-  description = 'Success',
-  summary = 'Success',
+  description = 'Отримання всіх не видалених записів',
+  summary = 'Отримання всіх не видалених записів',
 } = {}) =>
   applyDecorators(
     ApiOperation({ description, summary }),
