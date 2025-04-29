@@ -24,7 +24,6 @@ export class CurrencyService {
       where: [
         { name: createCurrencyDto.name },
         { code: createCurrencyDto.code },
-        { symbol: createCurrencyDto.symbol },
       ],
     });
     if (existingCurrency) {
@@ -36,9 +35,8 @@ export class CurrencyService {
     const existingDeletedCurrency = await this.currencyRepository.findOne({
       withDeleted: true,
       where: [
-        { name: createCurrencyDto.name, createdAt: Not(IsNull()) },
-        { code: createCurrencyDto.code, createdAt: Not(IsNull()) },
-        { symbol: createCurrencyDto.symbol, createdAt: Not(IsNull()) },
+        { name: createCurrencyDto.name, deletedAt: Not(IsNull()) },
+        { code: createCurrencyDto.code, deletedAt: Not(IsNull()) },
       ],
     });
     if (existingDeletedCurrency) {
@@ -85,16 +83,16 @@ export class CurrencyService {
     }
 
     const duplicatedCurrencies = await this.currencyRepository.find({
+      withDeleted: true,
       where: [
         { name: updateCurrencyDto.name, uuid: Not(uuid) },
-        { symbol: updateCurrencyDto.symbol, uuid: Not(uuid) },
         { code: updateCurrencyDto.code, uuid: Not(uuid) },
       ],
     });
-
+    console.log('duplicatedCurrencies', duplicatedCurrencies);
     if (duplicatedCurrencies.length !== 0) {
       throw new UnprocessableEntityException(
-        'Валюта із такою назвою та/або кодом та/або символом вже існує',
+        'Валюта із такою назвою та/або кодом вже існує серед активних або видалених записів',
       );
     }
 
@@ -124,15 +122,11 @@ export class CurrencyService {
       throw new NotFoundException(`Currency with ${uuid} not found`);
     }
     const existUndeletedCurrency = await this.currencyRepository.findOne({
-      where: [
-        { name: existingCurrency.name },
-        { code: existingCurrency.code },
-        { symbol: existingCurrency.symbol },
-      ],
+      where: [{ name: existingCurrency.name }, { code: existingCurrency.code }],
     });
     if (existUndeletedCurrency) {
       throw new UnprocessableEntityException(
-        'Запис із такою назвою та/або кодом та/або символом є серед не видалених записів',
+        'Запис із такою назвою та/або кодом є серед не видалених записів',
       );
     }
 
@@ -156,9 +150,9 @@ export class CurrencyService {
         'deletedAt',
       ],
     });
-    if (deletedItems.length === 0) {
-      throw new NotFoundException(`Записи відсутні`);
-    }
+    // if (deletedItems.length === 0) {
+    //   throw new NotFoundException(`Записи відсутні`);
+    // }
     return deletedItems;
   }
 }
