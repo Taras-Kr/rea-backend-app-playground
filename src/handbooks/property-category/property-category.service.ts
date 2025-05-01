@@ -87,6 +87,7 @@ export class PropertyCategoryService {
 
     const duplicatedPropertyCategory =
       await this.propertyCategoryRepository.findOne({
+        withDeleted: true,
         where: {
           name: updatePropertyCategoryDto.name,
           uuid: Not(uuid),
@@ -94,7 +95,9 @@ export class PropertyCategoryService {
       });
 
     if (duplicatedPropertyCategory) {
-      throwUnprocessable('Категорія з такою назвою вже існує');
+      throwUnprocessable(
+        'Категорія з такою назвою вже існує серед активний або видалених записів',
+      );
     }
 
     const propertyCategory = this.propertyCategoryRepository.create({
