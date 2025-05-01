@@ -89,7 +89,6 @@ export class CurrencyService {
         { code: updateCurrencyDto.code, uuid: Not(uuid) },
       ],
     });
-    console.log('duplicatedCurrencies', duplicatedCurrencies);
     if (duplicatedCurrencies.length !== 0) {
       throw new UnprocessableEntityException(
         'Валюта із такою назвою та/або кодом вже існує серед активних або видалених записів',

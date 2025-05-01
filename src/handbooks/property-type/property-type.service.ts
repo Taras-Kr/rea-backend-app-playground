@@ -92,13 +92,15 @@ export class PropertyTypeService {
       throw new NotFoundException('Запис не знайдено');
     }
 
-    const duplicatePropertyType = await this.propertyTypeRepository.findOne({
+    const duplicatePropertyType = await this.propertyTypeRepository.find({
+      withDeleted: true,
       where: {
         name: updatePropertyTypeDto.name,
         uuid: Not(uuid),
       },
     });
-    if (duplicatePropertyType) {
+    console.log('Duplicate:', duplicatePropertyType);
+    if (duplicatePropertyType.length !== 0) {
       throwUnprocessable('Тип з такою назвою вже існує');
     }
 
@@ -141,7 +143,7 @@ export class PropertyTypeService {
     };
   }
 
-  findDeletedAll() {
+  async findDeletedAll() {
     return this.propertyTypeRepository.find({
       withDeleted: true,
       where: {
