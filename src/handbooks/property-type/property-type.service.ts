@@ -8,7 +8,7 @@ import { CreatePropertyTypeDto } from './dto/create-property-type.dto';
 import { UpdatePropertyTypeDto } from './dto/update-property-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropertyType } from './entities/property-type.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { ILike, IsNull, Not, Repository } from 'typeorm';
 import { throwUnprocessable } from '../../common/exceptions/error-handler';
 import { validateUUIDFormat } from '../../common/utils/uuid.utils';
 import { PropertyCategoryService } from '../property-category/property-category.service';
@@ -67,7 +67,14 @@ export class PropertyTypeService {
   }
 
   findAll() {
-    return this.propertyTypeRepository.find();
+    return this.propertyTypeRepository.find({
+      relations: ['category'],
+      select: {
+        category: {
+          name: true,
+        },
+      },
+    });
   }
 
   async findOne(uuid: string) {
@@ -95,13 +102,14 @@ export class PropertyTypeService {
     const duplicatePropertyType = await this.propertyTypeRepository.find({
       withDeleted: true,
       where: {
-        name: updatePropertyTypeDto.name,
+        name: ILike(updatePropertyTypeDto.name),
         uuid: Not(uuid),
       },
     });
-    console.log('Duplicate:', duplicatePropertyType);
     if (duplicatePropertyType.length !== 0) {
-      throwUnprocessable('Тип з такою назвою вже існує');
+      throwUnprocessable(
+        `Тип з такою назвою \'${updatePropertyTypeDto.name}\' вже існує серед активних/видалених записів!`,
+      );
     }
 
     try {
@@ -149,16 +157,20 @@ export class PropertyTypeService {
       where: {
         deletedAt: Not(IsNull()),
       },
-      select: [
-        'uuid',
-        'name',
-        'slug',
-        'description',
-        'category_uuid',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
-      ],
+      relations: ['category'],
+      select: {
+        uuid: true,
+        name: true,
+        slug: true,
+        description: true,
+        category_uuid: true,
+        category: {
+          name: true,
+        },
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      },
     });
   }
 
