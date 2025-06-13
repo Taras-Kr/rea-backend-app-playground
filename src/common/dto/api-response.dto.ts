@@ -1,4 +1,4 @@
-export class ApiResponse<T> {
+export class CustomApiResponse<T> {
   data: T;
   message: string;
   statusCode: number;

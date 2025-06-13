@@ -1,5 +1,6 @@
 import { BaseEntity } from '../../entities/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Property } from '../../property/entities/property.entity';
 
 @Entity({ name: 'locations' })
 export class Location extends BaseEntity {
@@ -29,4 +30,8 @@ export class Location extends BaseEntity {
 
   @Column('decimal', { precision: 9, scale: 6, nullable: true, default: 0 })
   longitude?: number;
+
+  //одній локації може відповідати кілька об'єктів
+  @OneToMany(() => Property, (property) => property.location)
+  properties: Property[];
 }

@@ -85,7 +85,7 @@ export class PropertyTypeService {
       },
     });
     if (!existingPropertyType) {
-      throw new NotFoundException('Запис не знайдено');
+      throw new NotFoundException("Тип Об'єкту нерухомості не знайдено");
     }
     return existingPropertyType;
   }

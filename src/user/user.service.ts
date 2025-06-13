@@ -12,7 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { validate as uuidValidate } from 'uuid';
 import * as argon2 from 'argon2';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse } from '../common/dto/api-response.dto';
+import { CustomApiResponse } from '../common/dto/api-response.dto';
 import { UserRole } from '../handbooks/user-role/entities/user-role.entity';
 import { UserType } from '../handbooks/user-type/entities/user-type.entity';
 
@@ -156,7 +156,7 @@ export class UserService {
       );
     }
     await this.userRepository.softDelete(uuid);
-    return new ApiResponse(
+    return new CustomApiResponse(
       { uuid: uuid },
       'User deleted successfully',
       HttpStatus.OK,
@@ -210,7 +210,7 @@ export class UserService {
       throw new NotFoundException('User with ${uuid} not found');
     }
     await this.userRepository.restore(uuid);
-    return new ApiResponse({ uuid: uuid }, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse({ uuid: uuid }, 'Restored', HttpStatus.OK);
   }
 
   async update(uuid: string, updateUserDto: UpdateUserDto) {

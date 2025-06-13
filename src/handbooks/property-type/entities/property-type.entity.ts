@@ -5,10 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { BaseEntity } from '../../../entities/base.entity';
 import { PropertyCategory } from '../../property-category/entities/property-category.entity';
 import slugify from 'slugify';
+import { Property } from '../../../property/entities/property.entity';
 
 @Entity({ name: 'property-types' })
 export class PropertyType extends BaseEntity {
@@ -40,6 +42,9 @@ export class PropertyType extends BaseEntity {
 
   @Column({ type: 'uuid', name: 'category_uuid', nullable: false })
   category_uuid: string;
+
+  @OneToMany(() => Property, (property) => property.property_type)
+  properties: Property[];
 
   @BeforeInsert()
   @BeforeUpdate()

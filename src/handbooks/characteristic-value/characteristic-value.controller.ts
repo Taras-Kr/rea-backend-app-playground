@@ -13,7 +13,7 @@ import { CharacteristicValueService } from './characteristic-value.service';
 import { CreateCharacteristicValueDto } from './dto/create-characteristic-value.dto';
 import { UpdateCharacteristicValueDto } from './dto/update-characteristic-value.dto';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiResponse as Response } from '../../common/dto/api-response.dto';
+import { CustomApiResponse as Response } from '../../common/dto/api-response.dto';
 import {
   SwaggerCreate,
   SwaggerDelete,
