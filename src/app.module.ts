@@ -14,6 +14,7 @@ import { LocationModule } from './location/location.module';
 import { GeocodingModule } from './geocoding/geocoding.module';
 import { PropertyCharacteristicModule } from './handbooks/property-characteristic/property-characteristic.module';
 import { CharacteristicValueModule } from './handbooks/characteristic-value/characteristic-value.module';
+import { PropertyModule } from './property/property.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CharacteristicValueModule } from './handbooks/characteristic-value/char
     GeocodingModule,
     PropertyCharacteristicModule,
     CharacteristicValueModule,
+    PropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

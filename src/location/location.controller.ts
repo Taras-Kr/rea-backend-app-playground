@@ -25,7 +25,7 @@ import {
 } from '../common/decorators/swagger/common.decorator';
 import { CustomValidationPipe } from '../common/pipes/custom-validation.pipe';
 import * as examples from './swagger/responses.swagger';
-import { ApiResponse } from '../common/dto/api-response.dto';
+import { CustomApiResponse } from '../common/dto/api-response.dto';
 
 @ApiTags("Локації об'єктів нерухомості (адреси)")
 @Controller('locations')
@@ -86,7 +86,7 @@ export class LocationController {
   })
   async restore(@Param('uuid') uuid: string) {
     const result = await this.locationService.restore(uuid);
-    return new ApiResponse(result, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse(result, 'Restored', HttpStatus.OK);
   }
 
   @Put(':uuid/coordinates')
@@ -101,7 +101,7 @@ export class LocationController {
   })
   async updateCoordinates(@Param('uuid') uuid: string) {
     const response = await this.locationService.updateCoordinates(uuid);
-    return new ApiResponse(response, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
   @Put(':uuid')
@@ -117,13 +117,13 @@ export class LocationController {
     @Body() updateLocationDto: UpdateLocationDto,
   ) {
     const response = await this.locationService.update(uuid, updateLocationDto);
-    return new ApiResponse(response, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
   @Delete(':uuid')
   @SwaggerDelete()
   async remove(@Param('uuid') uuid: string) {
     const response = await this.locationService.softDelete(uuid);
-    return new ApiResponse(response, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Deleted', HttpStatus.OK);
   }
 }

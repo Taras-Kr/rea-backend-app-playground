@@ -15,7 +15,7 @@ import {
 import { UserRoleService } from './user-role.service';
 import { CreateUserRoleDto } from './dto/create-user-role.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
-import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 
@@ -29,7 +29,7 @@ export class UserRoleController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserRoleDto: CreateUserRoleDto) {
     const userRole = await this.userRoleService.create(createUserRoleDto);
-    return new ApiResponse(userRole, 'Created', HttpStatus.CREATED);
+    return new CustomApiResponse(userRole, 'Created', HttpStatus.CREATED);
   }
 
   @Roles('owner', 'admin', 'agent')
@@ -68,20 +68,20 @@ export class UserRoleController {
     @Body() updateUserRoleDto: UpdateUserRoleDto,
   ) {
     await this.userRoleService.update(uuid, updateUserRoleDto);
-    return new ApiResponse(uuid, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse(uuid, 'Updated', HttpStatus.OK);
   }
 
   @Roles('owner', 'admin')
   @Delete(':uuid')
   async remove(@Param('uuid') uuid: string) {
     const resp = await this.userRoleService.softDelete(uuid);
-    return new ApiResponse(resp, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse(resp, 'Deleted', HttpStatus.OK);
   }
 
   @Roles('owner', 'admin')
   @Put('archive/:uuid')
   async restore(@Param('uuid') uuid: string) {
     const res = await this.userRoleService.restore(uuid);
-    return new ApiResponse(res, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse(res, 'Restored', HttpStatus.OK);
   }
 }

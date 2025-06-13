@@ -12,7 +12,7 @@ import * as argon2 from 'argon2';
 import { User } from '../user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { Response, Request } from 'express';
-import { ApiResponse } from '../common/dto/api-response.dto';
+import { CustomApiResponse } from '../common/dto/api-response.dto';
 import { ProfileResponse } from '../common/dto/profile-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -49,14 +49,14 @@ export class AuthService {
     };
     const { password: _, ...resp } = res;
     // delete res_user.password;
-    return new ApiResponse(resp, 'Logged in', HttpStatus.OK);
+    return new CustomApiResponse(resp, 'Logged in', HttpStatus.OK);
   }
 
   logout(userUUID: string, @Res() response: Response) {
     response.clearCookie('refresh_token');
     response.clearCookie('access_token');
 
-    return new ApiResponse({ uuid: userUUID }, 'Logged out', HttpStatus.OK);
+    return new CustomApiResponse({ uuid: userUUID }, 'Logged out', HttpStatus.OK);
   }
 
   async refreshTokens(userUuid: string) {

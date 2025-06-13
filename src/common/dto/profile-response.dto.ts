@@ -1,6 +1,6 @@
-import { ApiResponse } from './api-response.dto';
+import { CustomApiResponse } from './api-response.dto';
 
-export class ProfileResponse extends ApiResponse<any> {
+export class ProfileResponse extends CustomApiResponse<any> {
   isAuthenticated: boolean;
 
   constructor(

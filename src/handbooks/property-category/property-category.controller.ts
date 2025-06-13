@@ -14,7 +14,7 @@ import { CreatePropertyCategoryDto } from './dto/create-property-category.dto';
 import { UpdatePropertyCategoryDto } from './dto/update-property-category.dto';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { ApiResponse as ApiResponseType } from '../../common/dto/api-response.dto';
+import { CustomApiResponse as ApiResponseType } from '../../common/dto/api-response.dto';
 import * as examples from './swagger/responses.swagger';
 
 import {

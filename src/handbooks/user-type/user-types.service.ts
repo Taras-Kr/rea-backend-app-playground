@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserType } from './entities/user-type.entity';
 import { FindOptionsWhere, IsNull, Not, Repository } from 'typeorm';
 import { validate } from 'uuid';
-import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { UserRole } from '../user-role/entities/user-role.entity';
 
 @Injectable()
@@ -74,7 +74,7 @@ export class UserTypesService {
       );
     }
     await this.userTypeRepository.update(uuid, updateUserTypeDto);
-    return new ApiResponse({ uuid: uuid }, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse({ uuid: uuid }, 'Updated', HttpStatus.OK);
   }
 
   async delete(uuid: string) {
@@ -91,7 +91,7 @@ export class UserTypesService {
     }
 
     await this.userTypeRepository.softDelete(uuid);
-    return new ApiResponse({ uuid: uuid }, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse({ uuid: uuid }, 'Deleted', HttpStatus.OK);
   }
 
   async findDeletedAll() {
@@ -111,7 +111,7 @@ export class UserTypesService {
       ...type,
       deletedAt: type.deletedAt.toLocaleDateString('en-CA'),
     }));
-    return new ApiResponse(resp, 'Success', HttpStatus.OK);
+    return new CustomApiResponse(resp, 'Success', HttpStatus.OK);
   }
 
   async restore(uuid: string) {
@@ -126,7 +126,7 @@ export class UserTypesService {
       throw new NotFoundException(`User Type with ${uuid} not found`);
     }
     await this.userTypeRepository.restore(uuid);
-    return new ApiResponse({ uuid: uuid }, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse({ uuid: uuid }, 'Restored', HttpStatus.OK);
   }
 
   async findByRole({ role, role_title }) {
