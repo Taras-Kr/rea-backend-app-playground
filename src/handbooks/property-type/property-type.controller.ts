@@ -13,7 +13,7 @@ import { PropertyTypeService } from './property-type.service';
 import { CreatePropertyTypeDto } from './dto/create-property-type.dto';
 import { UpdatePropertyTypeDto } from './dto/update-property-type.dto';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 import {
   SwaggerCreate,
@@ -25,7 +25,6 @@ import {
   SwaggerUpdate,
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
-import { validateUUIDFormat } from '../../common/utils/uuid.utils';
 
 @ApiTags('Довідник типів нерухомості')
 @Controller('handbooks/property-types')
@@ -43,7 +42,7 @@ export class PropertyTypeController {
   })
   async create(@Body() createPropertyTypeDto: CreatePropertyTypeDto) {
     const result = await this.propertyTypeService.create(createPropertyTypeDto);
-    return new ApiResponse(result, 'Created', HttpStatus.CREATED);
+    return new CustomApiResponse(result, 'Created', HttpStatus.CREATED);
   }
 
   @Get('archive')
@@ -88,7 +87,7 @@ export class PropertyTypeController {
   })
   async restore(@Param('uuid') uuid: string) {
     const response = await this.propertyTypeService.restore(uuid);
-    return new ApiResponse(response, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Restored', HttpStatus.OK);
   }
 
   @Put(':uuid')
@@ -111,7 +110,7 @@ export class PropertyTypeController {
       uuid,
       updatePropertyTypeDto,
     );
-    return new ApiResponse(result, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse(result, 'Updated', HttpStatus.OK);
   }
 
   @Delete(':uuid')
@@ -123,6 +122,6 @@ export class PropertyTypeController {
   })
   async softDelete(@Param('uuid') uuid: string) {
     const response = await this.propertyTypeService.softDelete(uuid);
-    return new ApiResponse(response, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Deleted', HttpStatus.OK);
   }
 }

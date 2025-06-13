@@ -24,7 +24,7 @@ import {
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
-import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomApiResponse } from '../../common/dto/api-response.dto';
 
 @Controller('/handbooks/property-characteristics')
 @ApiTags("Довідник характеристик об'єкта нерухомості")
@@ -48,7 +48,7 @@ export class PropertyCharacteristicController {
     const result = await this.propertyCharacteristicService.create(
       createPropertyCharacteristicDto,
     );
-    return new ApiResponse(result, 'Created', HttpStatus.CREATED);
+    return new CustomApiResponse(result, 'Created', HttpStatus.CREATED);
   }
 
   @Get('archive')
@@ -98,7 +98,7 @@ export class PropertyCharacteristicController {
   })
   async restore(@Param('uuid') uuid: string) {
     const response = await this.propertyCharacteristicService.restore(uuid);
-    return new ApiResponse(response, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Restored', HttpStatus.OK);
   }
 
   @Put(':uuid')
@@ -121,7 +121,7 @@ export class PropertyCharacteristicController {
       uuid,
       updatePropertyCharacteristicDto,
     );
-    return new ApiResponse(response, 'Updated', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
   @Delete(':uuid')
@@ -136,6 +136,6 @@ export class PropertyCharacteristicController {
   })
   async softDelete(@Param('uuid') uuid: string) {
     const response = await this.propertyCharacteristicService.softDelete(uuid);
-    return new ApiResponse(response, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse(response, 'Deleted', HttpStatus.OK);
   }
 }

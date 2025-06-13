@@ -7,10 +7,7 @@ import { CharacteristicValue } from '../characteristic-value/entities/characteri
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      PropertyCharacteristic,
-      CharacteristicValue,
-    ]),
+    TypeOrmModule.forFeature([PropertyCharacteristic, CharacteristicValue]),
   ],
   controllers: [PropertyCharacteristicController],
   providers: [PropertyCharacteristicService],

@@ -29,7 +29,7 @@ export class LocationService {
       where: { uuid: uuid },
     });
     if (!existingLocation) {
-      throw new NotFoundException('Запис не знайдено');
+      throw new NotFoundException("Адресу об'єкта нерухомості не знайдено");
     }
     return existingLocation;
   }

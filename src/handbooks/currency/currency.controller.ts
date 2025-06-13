@@ -12,7 +12,7 @@ import {
 import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { ApiResponse } from '../../common/dto/api-response.dto';
+import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import {
@@ -93,7 +93,7 @@ export class CurrencyController {
     @Body() updateCurrencyDto: UpdateCurrencyDto,
   ) {
     const res = await this.currencyService.update(uuid, updateCurrencyDto);
-    return new ApiResponse(res, 'Updated successfully', HttpStatus.OK);
+    return new CustomApiResponse(res, 'Updated successfully', HttpStatus.OK);
   }
 
   @Delete(':uuid')
@@ -108,7 +108,7 @@ export class CurrencyController {
   })
   async softDelete(@Param('uuid') uuid: string) {
     const res = await this.currencyService.softDelete(uuid);
-    return new ApiResponse(res, 'Deleted', HttpStatus.OK);
+    return new CustomApiResponse(res, 'Deleted', HttpStatus.OK);
   }
 
   @Put('archive/:uuid')
@@ -123,6 +123,6 @@ export class CurrencyController {
   })
   async restore(@Param('uuid') uuid: string) {
     const res = await this.currencyService.restore(uuid);
-    return new ApiResponse(res, 'Restored', HttpStatus.OK);
+    return new CustomApiResponse(res, 'Restored', HttpStatus.OK);
   }
 }
