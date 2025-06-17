@@ -97,19 +97,19 @@ export class UserTypesService {
   async findDeletedAll() {
     const userTypes = await this.userTypeRepository.find({
       withDeleted: true,
-      where: { deletedAt: Not(IsNull()) },
+      where: { deleted_at: Not(IsNull()) },
       select: {
         uuid: true,
         type: true,
         title: true,
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
       },
     });
     const resp = userTypes.map((type) => ({
       ...type,
-      deletedAt: type.deletedAt.toLocaleDateString('en-CA'),
+      deletedAt: type.deleted_at.toLocaleDateString('en-CA'),
     }));
     return new CustomApiResponse(resp, 'Success', HttpStatus.OK);
   }

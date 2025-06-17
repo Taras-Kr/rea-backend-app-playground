@@ -63,7 +63,7 @@ export class LocationService {
     return this.locationRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       select: [
         'uuid',
@@ -76,9 +76,9 @@ export class LocationService {
         'description',
         'latitude',
         'longitude',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
+        'created_at',
+        'updated_at',
+        'deleted_at',
       ],
     });
   }

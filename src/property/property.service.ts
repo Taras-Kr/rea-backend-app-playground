@@ -65,7 +65,7 @@ export class PropertyService {
           building_number: true,
           apartment_number: true,
         },
-        createdAt: true,
+        created_at: true,
       },
     });
   }
@@ -76,7 +76,13 @@ export class PropertyService {
       where: {
         uuid: uuid,
       },
-      relations: ['property_type', 'location', 'property_type.category'],
+      relations: [
+        'property_type',
+        'location',
+        'property_type.category',
+        'property_characteristic_values',
+        'property_characteristic_values.property_characteristic',
+      ],
       select: {
         uuid: true,
         title: true,
@@ -99,11 +105,22 @@ export class PropertyService {
           building_number: true,
           apartment_number: true,
         },
-        createdAt: true,
+        property_characteristic_values: {
+          uuid: true,
+          value: true,
+          property_characteristic: {
+            uuid: true,
+            name: true,
+            type: true,
+            is_multiple: true,
+            description: true,
+          },
+        },
+        created_at: true,
       },
     });
     if (!existingProperty) {
-      throw new NotFoundException('Запис не знайдено');
+      throw new NotFoundException("Об'єкт нерухомості не знайдено");
     }
     return existingProperty;
   }
@@ -166,7 +183,7 @@ export class PropertyService {
     return this.propertyRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       relations: ['property_type', 'location', 'property_type.category'],
       select: {
@@ -191,9 +208,9 @@ export class PropertyService {
           building_number: true,
           apartment_number: true,
         },
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
       },
     });
   }

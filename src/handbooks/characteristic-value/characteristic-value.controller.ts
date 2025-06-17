@@ -24,7 +24,9 @@ import {
 import * as examples from './swagger/responses.swagger';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 
-@ApiTags("Значення характеристик об'єктів нерухомості")
+@ApiTags(
+  "Значення характеристик об'єктів нерухомості (для характеристики Вибір із кількох(із списку))",
+)
 @Controller('/handbooks/property-characteristics')
 export class CharacteristicValueController {
   constructor(

@@ -1,6 +1,7 @@
 import { BaseEntity } from '../../../entities/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { CharacteristicValue } from '../../characteristic-value/entities/characteristic-value.entity';
+import { PropertyCharacteristicValue } from '../../property-characteristic-value/entities/property-characteristic-value.entity';
 
 export enum PropertyCharacteristicsType {
   NUMBER = 1,
@@ -30,4 +31,11 @@ export class PropertyCharacteristic extends BaseEntity {
 
   @OneToMany(() => CharacteristicValue, (value) => value.characteristic)
   values: CharacteristicValue[];
+
+  @OneToMany(
+    () => PropertyCharacteristicValue,
+    (property_characteristic_values) =>
+      property_characteristic_values.property_characteristic,
+  )
+  property_characteristic_values: PropertyCharacteristicValue[];
 }

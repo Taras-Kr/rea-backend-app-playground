@@ -35,8 +35,8 @@ export class CurrencyService {
     const existingDeletedCurrency = await this.currencyRepository.findOne({
       withDeleted: true,
       where: [
-        { name: createCurrencyDto.name, deletedAt: Not(IsNull()) },
-        { code: createCurrencyDto.code, deletedAt: Not(IsNull()) },
+        { name: createCurrencyDto.name, deleted_at: Not(IsNull()) },
+        { code: createCurrencyDto.code, deleted_at: Not(IsNull()) },
       ],
     });
     if (existingDeletedCurrency) {
@@ -137,16 +137,16 @@ export class CurrencyService {
     const deletedItems = await this.currencyRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       select: [
         'uuid',
         'name',
         'code',
         'symbol',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
+        'created_at',
+        'updated_at',
+        'deleted_at',
       ],
     });
     // if (deletedItems.length === 0) {
