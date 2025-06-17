@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 import { PropertyType } from '../../property-type/entities/property-type.entity';
 
-@Entity({ name: 'property-categories' })
+@Entity({ name: 'property_categories' })
 export class PropertyCategory extends BaseEntity {
   @Column('varchar', {
     name: 'name',

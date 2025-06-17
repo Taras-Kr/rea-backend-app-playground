@@ -1,7 +1,8 @@
 import { BaseEntity } from '../../entities/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { PropertyType } from '../../handbooks/property-type/entities/property-type.entity';
 import { Location } from '../../location/entities/location.entity';
+import { PropertyCharacteristicValue } from '../../handbooks/property-characteristic-value/entities/property-characteristic-value.entity';
 
 @Entity({ name: 'properties' })
 export class Property extends BaseEntity {
@@ -26,6 +27,12 @@ export class Property extends BaseEntity {
   })
   @JoinColumn({ name: `location_uuid` })
   location: Location;
+
+  @OneToMany(
+    () => PropertyCharacteristicValue,
+    (propertyCharacteristicValues) => propertyCharacteristicValues.property,
+  )
+  property_characteristic_values: PropertyCharacteristicValue[];
 
   @Column('boolean', {
     default: false,

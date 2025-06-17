@@ -35,7 +35,7 @@ export class PropertyCategoryService {
         withDeleted: true,
         where: {
           name: createPropertyCategoryDto.name,
-          deletedAt: Not(IsNull()),
+          deleted_at: Not(IsNull()),
         },
       });
     if (existingDeletedPropertyCategory) {
@@ -126,9 +126,9 @@ export class PropertyCategoryService {
     return await this.propertyCategoryRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
-      select: ['uuid', 'name', 'slug', 'createdAt', 'updatedAt', 'deletedAt'],
+      select: ['uuid', 'name', 'slug', 'created_at', 'updated_at', 'deleted_at'],
     });
   }
 
