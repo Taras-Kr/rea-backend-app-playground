@@ -36,7 +36,7 @@ export class PropertyTypeService {
         withDeleted: true,
         where: {
           name: createPropertyTypeDto.name,
-          deletedAt: Not(IsNull()),
+          deleted_at: Not(IsNull()),
         },
       });
     if (existingDeletedPropertyTpe) {
@@ -155,7 +155,7 @@ export class PropertyTypeService {
     return this.propertyTypeRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       relations: ['category'],
       select: {
@@ -167,9 +167,9 @@ export class PropertyTypeService {
         category: {
           name: true,
         },
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
       },
     });
   }

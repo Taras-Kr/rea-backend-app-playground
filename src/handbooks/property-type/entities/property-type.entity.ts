@@ -12,7 +12,7 @@ import { PropertyCategory } from '../../property-category/entities/property-cate
 import slugify from 'slugify';
 import { Property } from '../../../property/entities/property.entity';
 
-@Entity({ name: 'property-types' })
+@Entity({ name: 'property_types' })
 export class PropertyType extends BaseEntity {
   @Column('varchar', {
     name: 'name',

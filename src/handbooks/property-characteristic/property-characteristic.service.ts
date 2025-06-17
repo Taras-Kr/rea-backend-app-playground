@@ -35,7 +35,7 @@ export class PropertyCharacteristicService {
         withDeleted: true,
         where: {
           name: createPropertyCharacteristicDto.name,
-          deletedAt: Not(IsNull()),
+          deleted_at: Not(IsNull()),
         },
       });
 
@@ -77,7 +77,9 @@ export class PropertyCharacteristicService {
       },
     });
     if (!existingItem) {
-      throw new NotFoundException('Запис не знайдено');
+      throw new NotFoundException(
+        "Характеристику об'єкту нерухомості не знайдено",
+      );
     }
     return existingItem;
   }
@@ -140,16 +142,16 @@ export class PropertyCharacteristicService {
     return this.propertyCharacteristicRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       select: [
         'uuid',
         'name',
         'type',
         'description',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
+        'created_at',
+        'updated_at',
+        'deleted_at',
       ],
     });
   }

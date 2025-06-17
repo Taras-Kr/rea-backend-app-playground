@@ -93,8 +93,8 @@ export class UserService {
         'email',
         'type_uuid',
         'role_uuid',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
     });
     return users.map((user) => ({
@@ -167,7 +167,7 @@ export class UserService {
     const users = await this.userRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       relations: ['type', 'role'],
       select: [
@@ -177,9 +177,9 @@ export class UserService {
         'email',
         'type_uuid',
         'role_uuid',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
+        'created_at',
+        'updated_at',
+        'deleted_at',
       ],
     });
     return users.map((user) => ({
@@ -191,7 +191,7 @@ export class UserService {
       type_title: user.type.title,
       role_uuid: user.role_uuid,
       role_title: user.role.title,
-      deletedAt: user.deletedAt.toLocaleDateString('en-CA'),
+      deletedAt: user.deleted_at.toLocaleDateString('en-CA'),
     }));
   }
 

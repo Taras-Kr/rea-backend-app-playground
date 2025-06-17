@@ -15,6 +15,7 @@ import { GeocodingModule } from './geocoding/geocoding.module';
 import { PropertyCharacteristicModule } from './handbooks/property-characteristic/property-characteristic.module';
 import { CharacteristicValueModule } from './handbooks/characteristic-value/characteristic-value.module';
 import { PropertyModule } from './property/property.module';
+import { PropertyCharacteristicValueModule } from './handbooks/property-characteristic-value/property-characteristic-value.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { PropertyModule } from './property/property.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.js, .ts}'],
-        synchronize: true,
+        logging: false,
+        synchronize: false,
       }),
 
       inject: [ConfigService],
@@ -48,6 +50,7 @@ import { PropertyModule } from './property/property.module';
     PropertyCharacteristicModule,
     CharacteristicValueModule,
     PropertyModule,
+    PropertyCharacteristicValueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

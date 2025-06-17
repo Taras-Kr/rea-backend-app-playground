@@ -56,8 +56,8 @@ export class UserRoleService {
         'title',
         'type_uuid',
         'type',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
     });
     if (!userRole) {
@@ -70,8 +70,8 @@ export class UserRoleService {
       type_uuid: userRole.type_uuid,
       type: userRole.type.type,
       type_title: userRole.type.title,
-      createdAt: userRole.createdAt,
-      updatedAt: userRole.updatedAt,
+      createdAt: userRole.created_at,
+      updatedAt: userRole.updated_at,
     };
   }
 
@@ -114,7 +114,7 @@ export class UserRoleService {
     const roles = await this.userRoleRepository.find({
       withDeleted: true,
       where: {
-        deletedAt: Not(IsNull()),
+        deleted_at: Not(IsNull()),
       },
       relations: ['type'],
       select: [
@@ -123,9 +123,9 @@ export class UserRoleService {
         'title',
         'type_uuid',
         'type',
-        'createdAt',
-        'updatedAt',
-        'deletedAt',
+        'created_at',
+        'updated_at',
+        'deleted_at',
       ],
     });
 
@@ -133,7 +133,7 @@ export class UserRoleService {
       ...role,
       type_title: role.type.title,
       type: role.type.type,
-      deletedAt: role.deletedAt.toLocaleDateString('en-CA'),
+      deletedAt: role.deleted_at.toLocaleDateString('en-CA'),
     }));
   }
 
@@ -174,8 +174,8 @@ export class UserRoleService {
         'title',
         'type_uuid',
         'type',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
     });
 
