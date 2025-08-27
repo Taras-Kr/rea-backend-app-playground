@@ -10,8 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
-import { CreatePropertyDto } from './dto/create-property.dto';
-import { UpdatePropertyDto } from './dto/update-property.dto';
+
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   SwaggerCreate,
@@ -24,6 +23,8 @@ import {
 import { CustomValidationPipe } from '../common/pipes/custom-validation.pipe';
 import * as examples from './swagger/responses.swagger';
 import { CustomApiResponse } from '../common/dto/api-response.dto';
+import { CreateFullPropertyDto } from './dto/create-full-property';
+import { UpdateFullPropertyDto } from './dto/update-full-property.dto';
 
 @ApiTags("Об'єкти нерухомості")
 @Controller('properties')
@@ -39,8 +40,12 @@ export class PropertyController {
     example400: examples.create400,
   })
   @ApiResponse({ status: 404, example: examples.create404 })
-  async create(@Body() createPropertyDto: CreatePropertyDto) {
-    const result = await this.propertyService.create(createPropertyDto);
+  // async create(@Body() createPropertyDto: CreatePropertyWithLocationDto) {
+  //   const result = await this.propertyService.create(createPropertyDto);
+  //   return new CustomApiResponse(result, 'Created', HttpStatus.CREATED);
+  // }
+  async create(@Body() createPropertyDto: CreateFullPropertyDto) {
+    const result = await this.propertyService.createProperty(createPropertyDto);
     return new CustomApiResponse(result, 'Created', HttpStatus.CREATED);
   }
 
@@ -92,9 +97,12 @@ export class PropertyController {
   })
   async update(
     @Param('uuid') uuid: string,
-    @Body() updatePropertyDto: UpdatePropertyDto,
+    @Body() updatePropertyDto: UpdateFullPropertyDto,
   ) {
-    const result = await this.propertyService.update(uuid, updatePropertyDto);
+    const result = await this.propertyService.updateProperty(
+      uuid,
+      updatePropertyDto,
+    );
     return new CustomApiResponse(result, 'Updated', HttpStatus.OK);
   }
 
