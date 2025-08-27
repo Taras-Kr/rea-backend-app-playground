@@ -1,16 +1,16 @@
 import {
-  IsDecimal,
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
   IsOptional,
   Length,
+  MaxLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateLocationDto {
   @IsOptional()
-  @Length(0, 100)
+  @Length(0, 100, { message: 'Не більше 100 символів' })
   @ApiProperty({
     description: 'ОТГ (Об’єднана територіальна громада)',
     example: 'Львівська ОТГ',
@@ -18,8 +18,8 @@ export class CreateLocationDto {
   })
   community?: string;
 
-  @IsNotEmpty()
-  @Length(1, 100)
+  @IsNotEmpty({ message: "Обов'язкове поле" })
+  @MaxLength(100, { message: 'Не більше 100 символів' })
   @ApiProperty({
     description: 'Населений пункт (місто, селище, селище міського типу)',
     example: 'місто Львів',
@@ -28,7 +28,7 @@ export class CreateLocationDto {
   settlement: string;
 
   @IsOptional()
-  @Length(0, 100)
+  @Length(0, 100, { message: 'Не більше 100 символів' })
   @ApiProperty({
     description: 'Район (для міст або селищ)',
     example: 'Франківський',
@@ -37,7 +37,7 @@ export class CreateLocationDto {
   district?: string;
 
   @IsOptional()
-  @Length(0, 100)
+  @Length(0, 100, { message: 'Не більше 100 символів' })
   @ApiProperty({
     description: 'Вулиця',
     example: 'Бойчука',
@@ -46,7 +46,7 @@ export class CreateLocationDto {
   street?: string;
 
   @IsOptional()
-  @Length(0, 6)
+  @Length(0, 6, { message: 'Не більше 6 символів' })
   @ApiProperty({
     description: 'Номер будинку',
     example: '100-Б',
@@ -55,7 +55,7 @@ export class CreateLocationDto {
   building_number?: string;
 
   @IsOptional()
-  @Length(0, 6)
+  @Length(0, 6, { message: 'Не більше 6 символів' })
   @ApiProperty({
     description: 'Номер квартири',
     example: '259-П',
@@ -64,7 +64,7 @@ export class CreateLocationDto {
   apartment_number?: string;
 
   @IsOptional()
-  @Length(0, 500)
+  @Length(0, 500, { message: 'Не більше 500 символів' })
   @ApiProperty({
     description: 'Опис локації',
     example: 'Вхід через провулок. Поряд школа',

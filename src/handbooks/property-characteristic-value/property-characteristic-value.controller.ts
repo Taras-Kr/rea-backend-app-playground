@@ -22,7 +22,8 @@ import {
 } from '../../common/decorators/swagger/common.decorator';
 import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { CreatePropertyCharacteristicsBatchDto } from './dto/create-property-characteristics-batch.dto';
 
 @ApiTags("Значення характеристики об'єкта нерухомості")
 @Controller('property-characteristic-value')
@@ -45,6 +46,30 @@ export class PropertyCharacteristicValueController {
     const response = await this.propertyCharacteristicValueService.create(
       createPropertyCharacteristicValueDto,
     );
+    return new CustomApiResponse(response, 'Created', HttpStatus.CREATED);
+  }
+
+  @Post(':property_uuid')
+  @UsePipes(new CustomValidationPipe())
+  @SwaggerCreate({
+    description: "Додавання значень характеристик об'єкта нерухомості",
+    summary: "Додавання значень характеристик об'єкта нерухомості",
+  })
+  @ApiParam({
+    name: 'property_uuid',
+    example: 'cc2fc8ec-ffd0-4a28-891d-145b16e82c48',
+    description: "UUID характеристики об'єкту нерухомості",
+  })
+  @ApiBody({ type: [CreatePropertyCharacteristicsBatchDto] })
+  async createBatch(
+    @Param('property_uuid') property_uuid: string,
+    @Body() batch: CreatePropertyCharacteristicsBatchDto[],
+  ) {
+    const response =
+      await this.propertyCharacteristicValueService.createPropertyCharacteristicValueBatch(
+        property_uuid,
+        batch,
+      );
     return new CustomApiResponse(response, 'Created', HttpStatus.CREATED);
   }
 
