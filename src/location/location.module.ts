@@ -4,10 +4,12 @@ import { LocationController } from './location.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Location } from './entities/location.entity';
 import { GeocodingService } from '../geocoding/geocoding.service';
+import { GeocodingModule } from '../geocoding/geocoding.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Location])],
+  imports: [TypeOrmModule.forFeature([Location]), GeocodingModule],
   controllers: [LocationController],
-  providers: [LocationService, GeocodingService],
+  providers: [LocationService],
+  exports: [LocationService],
 })
 export class LocationModule {}

@@ -8,5 +8,6 @@ import { PropertyCategory } from './entities/property-category.entity';
   imports: [TypeOrmModule.forFeature([PropertyCategory])],
   controllers: [PropertyCategoryController],
   providers: [PropertyCategoryService],
+  exports: [PropertyCategoryService],
 })
 export class PropertyCategoryModule {}
