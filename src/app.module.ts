@@ -16,6 +16,9 @@ import { PropertyCharacteristicModule } from './handbooks/property-characteristi
 import { CharacteristicValueModule } from './handbooks/characteristic-value/characteristic-value.module';
 import { PropertyModule } from './property/property.module';
 import { PropertyCharacteristicValueModule } from './handbooks/property-characteristic-value/property-characteristic-value.module';
+import { MinioModule } from './minio/minio.module';
+import { PropertyImageModule } from './property-image/property-image.module';
+import { ImageGalleryModule } from './image-gallery/image-gallery.module';
 
 @Module({
   imports: [
@@ -51,6 +54,9 @@ import { PropertyCharacteristicValueModule } from './handbooks/property-characte
     CharacteristicValueModule,
     PropertyModule,
     PropertyCharacteristicValueModule,
+    MinioModule,
+    PropertyImageModule,
+    ImageGalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

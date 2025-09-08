@@ -1,8 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { PropertyService } from './property.service';
-import { PropertyController } from './property.controller';
+import { PropertyImageService } from './property-image.service';
+import { PropertyImageController } from './property-image.controller';
+import { PropertyImage } from './entities/property-image.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Property } from './entities/property.entity';
+import { MinioModule } from '../minio/minio.module';
+import { PropertyModule } from '../property/property.module';
 import { PropertyTypeModule } from '../handbooks/property-type/property-type.module';
 import { LocationModule } from '../location/location.module';
 import { PropertyCategoryModule } from '../handbooks/property-category/property-category.module';
@@ -11,15 +13,17 @@ import { ImageGalleryModule } from '../image-gallery/image-gallery.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Property]),
+    TypeOrmModule.forFeature([PropertyImage]),
+    forwardRef(() => MinioModule),
+    PropertyModule,
     PropertyTypeModule,
     LocationModule,
     PropertyCategoryModule,
     GeocodingModule,
-    forwardRef(() => ImageGalleryModule),
+    ImageGalleryModule,
   ],
-  controllers: [PropertyController],
-  providers: [PropertyService],
-  exports: [PropertyService],
+  controllers: [PropertyImageController],
+  providers: [PropertyImageService],
+  exports: [TypeOrmModule],
 })
-export class PropertyModule {}
+export class PropertyImageModule {}

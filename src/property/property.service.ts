@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePropertyWithLocationDto } from './dto/create-property-with-location.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { DataSource, IsNull, Not, Repository } from 'typeorm';
@@ -10,6 +10,7 @@ import { validateUUIDFormat } from '../common/utils/uuid.utils';
 import { Location } from '../location/entities/location.entity';
 import { CreateFullPropertyDto } from './dto/create-full-property';
 import { UpdateFullPropertyDto } from './dto/update-full-property.dto';
+import { ImageGalleryService } from '../image-gallery/image-gallery.service';
 
 @Injectable()
 export class PropertyService {
@@ -18,8 +19,11 @@ export class PropertyService {
     private readonly propertyRepository: Repository<Property>,
     private readonly propertyTypeService: PropertyTypeService,
     private readonly propertyLocationService: LocationService,
+    private readonly imageGalleryService: ImageGalleryService,
     private readonly dataSource: DataSource,
   ) {}
+
+  private readonly logger = new Logger('PropertyService');
 
   // Метод створення об'єкта нерухомості використовуючи транзакції
   async createProperty(
@@ -77,12 +81,17 @@ export class PropertyService {
 
   findAll() {
     return this.propertyRepository.find({
-      relations: ['property_type', 'location', 'property_type.category'],
+      relations: [
+        'property_type',
+        'location',
+        'property_type.category',
+        'gallery',
+        'gallery.propertyImages',
+      ],
       select: {
         uuid: true,
         title: true,
         is_published: true,
-        gallery_uuid: true,
         property_type: {
           uuid: true,
           name: true,
@@ -99,6 +108,11 @@ export class PropertyService {
           street: true,
           building_number: true,
           apartment_number: true,
+        },
+        gallery: {
+          uuid: true,
+          description: true,
+          propertyImages: true,
         },
         created_at: true,
       },
@@ -117,12 +131,18 @@ export class PropertyService {
         'property_type.category',
         'property_characteristic_values',
         'property_characteristic_values.property_characteristic',
+        'gallery',
+        'gallery.propertyImages',
       ],
       select: {
         uuid: true,
         title: true,
         is_published: true,
-        gallery_uuid: true,
+        gallery: {
+          uuid: true,
+          description: true,
+          propertyImages: true,
+        },
         property_type: {
           uuid: true,
           name: true,
@@ -155,6 +175,13 @@ export class PropertyService {
           },
         },
         created_at: true,
+      },
+      order: {
+        gallery: {
+          propertyImages: {
+            created_at: 'ASC',
+          },
+        },
       },
     });
     if (!existingProperty) {

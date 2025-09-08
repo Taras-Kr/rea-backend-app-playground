@@ -40,7 +40,6 @@ export class PropertyCharacteristicValueService {
     propertyUuid: string,
     dtos: CreatePropertyCharacteristicsBatchDto[],
   ): Promise<PropertyCharacteristicValue[]> {
-
     validateUUIDFormat(
       propertyUuid,
       "Некоректний формат UUID об'єкта нерухомості",
@@ -59,7 +58,6 @@ export class PropertyCharacteristicValueService {
     // );
 
     const existingProperty = await this.propertyService.findOne(propertyUuid);
-
 
     if (!existingProperty) {
       this.logger.error(

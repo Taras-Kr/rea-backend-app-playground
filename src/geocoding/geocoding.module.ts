@@ -7,5 +7,6 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [GeocodingController],
   providers: [GeocodingService],
   imports: [ConfigModule],
+  exports: [GeocodingService],
 })
 export class GeocodingModule {}
