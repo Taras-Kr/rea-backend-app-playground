@@ -1,25 +1,25 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { PropertyService } from './property.service';
-import { PropertyController } from './property.controller';
+import { ImageGalleryService } from './image-gallery.service';
+import { ImageGalleryController } from './image-gallery.controller';
+import { ImageGallery } from './entities/image-gallery.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Property } from './entities/property.entity';
+import { PropertyModule } from '../property/property.module';
 import { PropertyTypeModule } from '../handbooks/property-type/property-type.module';
 import { LocationModule } from '../location/location.module';
 import { PropertyCategoryModule } from '../handbooks/property-category/property-category.module';
 import { GeocodingModule } from '../geocoding/geocoding.module';
-import { ImageGalleryModule } from '../image-gallery/image-gallery.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Property]),
+    TypeOrmModule.forFeature([ImageGallery]),
+    forwardRef(() => PropertyModule),
     PropertyTypeModule,
     LocationModule,
     PropertyCategoryModule,
     GeocodingModule,
-    forwardRef(() => ImageGalleryModule),
   ],
-  controllers: [PropertyController],
-  providers: [PropertyService],
-  exports: [PropertyService],
+  controllers: [ImageGalleryController],
+  providers: [ImageGalleryService],
+  exports: [ImageGalleryService],
 })
-export class PropertyModule {}
+export class ImageGalleryModule {}

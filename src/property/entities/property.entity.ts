@@ -1,8 +1,16 @@
 import { BaseEntity } from '../../entities/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { PropertyType } from '../../handbooks/property-type/entities/property-type.entity';
 import { Location } from '../../location/entities/location.entity';
 import { PropertyCharacteristicValue } from '../../handbooks/property-characteristic-value/entities/property-characteristic-value.entity';
+import { ImageGallery } from '../../image-gallery/entities/image-gallery.entity';
 
 @Entity({ name: 'properties' })
 export class Property extends BaseEntity {
@@ -40,6 +48,10 @@ export class Property extends BaseEntity {
   })
   is_published: boolean;
 
-  @Column('uuid', { nullable: true, name: 'gallery_uuid' })
+  @OneToOne(() => ImageGallery, (imageGallery) => imageGallery.property, {})
+  @JoinColumn({ name: `gallery_uuid`, referencedColumnName: 'uuid' })
+  gallery: ImageGallery;
+
+  @Column('uuid', { nullable: true })
   gallery_uuid: string;
 }
