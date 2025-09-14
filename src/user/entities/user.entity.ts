@@ -31,4 +31,7 @@ export class User extends BaseEntity {
 
   @Column({ type: 'uuid' }) // Додаємо збереження UUID
   role_uuid: string;
+
+  @Column({ name: 'hashed_refresh_token', nullable: true })
+  hashed_refresh_token: string;
 }

@@ -8,6 +8,7 @@ import {
   UsePipes,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -25,12 +26,17 @@ import {
 import { CustomValidationPipe } from '../common/pipes/custom-validation.pipe';
 import * as examples from './swagger/responses.swagger';
 import { CustomApiResponse } from '../common/dto/api-response.dto';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @ApiTags("Локації об'єктів нерухомості (адреси)")
 @Controller('locations')
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -43,6 +49,8 @@ export class LocationController {
     return this.locationService.create(createLocationDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get('archive')
   @SwaggerGetArchive({
     example200: examples.getArchive200,
@@ -51,6 +59,8 @@ export class LocationController {
     return this.locationService.findDeletedAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     description: 'Отримання всіх не видалених записів локацій',
@@ -61,6 +71,8 @@ export class LocationController {
     return this.locationService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     description: 'Отримання не видаленого запису про локацію',
@@ -76,6 +88,8 @@ export class LocationController {
     return this.locationService.findOne(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Put('archive/:uuid')
   @SwaggerRestore()
   @ApiParam({
@@ -88,6 +102,8 @@ export class LocationController {
     return new CustomApiResponse(result, 'Restored', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Put(':uuid/coordinates')
   @SwaggerUpdate({
     description: "Визначення довготи та широти із адреси об'єкта нерухомості",
@@ -103,6 +119,8 @@ export class LocationController {
     return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate()
@@ -119,6 +137,8 @@ export class LocationController {
     return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Delete(':uuid')
   @SwaggerDelete()
   async remove(@Param('uuid') uuid: string) {

@@ -8,6 +8,7 @@ import {
   UsePipes,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyCategoryService } from './property-category.service';
 import { CreatePropertyCategoryDto } from './dto/create-property-category.dto';
@@ -26,6 +27,9 @@ import {
   SwaggerRestore,
   SwaggerUpdate,
 } from '../../common/decorators/swagger/common.decorator';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags("Довідник категорій  об'єктів нерухомості")
 @Controller('handbooks/property-categories')
@@ -34,6 +38,8 @@ export class PropertyCategoryController {
     private readonly propertyCategoryService: PropertyCategoryService,
   ) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -47,6 +53,8 @@ export class PropertyCategoryController {
     return this.propertyCategoryService.create(createPropertyCategoryDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get('archive')
   @SwaggerGetArchive({
     example200: examples.getArchive200,
@@ -55,6 +63,8 @@ export class PropertyCategoryController {
     return this.propertyCategoryService.findDeletedAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     example200: examples.get200,
@@ -67,6 +77,8 @@ export class PropertyCategoryController {
     return this.propertyCategoryService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     example200: examples.getByUuid200,
@@ -84,6 +96,8 @@ export class PropertyCategoryController {
     return this.propertyCategoryService.findOne(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put('archive/:uuid')
   @SwaggerRestore({
     description: "Поновлення з архіву категорії об'єкта нерухомості за UUID",
@@ -100,6 +114,8 @@ export class PropertyCategoryController {
     return new ApiResponseType(res, 'Restored', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -123,6 +139,8 @@ export class PropertyCategoryController {
     return new ApiResponseType(res, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':uuid')
   @SwaggerDelete({
     description: "М'яке видалення категорії об'єкта нерухомості",

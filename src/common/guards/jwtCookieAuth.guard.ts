@@ -1,4 +1,9 @@
-import { CanActivate, Injectable, ExecutionContext } from '@nestjs/common';
+import {
+  CanActivate,
+  Injectable,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as process from 'node:process';
 
@@ -8,17 +13,17 @@ export class JwtCookieAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = request.cookies.access_token;
+    const token = request.cookies.refresh_token;
     if (!token) {
-      // throw new UnauthorizedException();
+      throw new UnauthorizedException('Refresh token відсутній');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_ACCESS_SECRET,
+        secret: process.env.JWT_REFRESH_SECRET,
       });
       request['user'] = payload;
     } catch {
-      // throw new UnauthorizedException();
+      throw new UnauthorizedException('Недійсний refresh token');
     }
     return true;
   }

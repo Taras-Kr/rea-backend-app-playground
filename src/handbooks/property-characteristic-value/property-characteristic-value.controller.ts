@@ -8,6 +8,7 @@ import {
   HttpStatus,
   UsePipes,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyCharacteristicValueService } from './property-characteristic-value.service';
 import { CreatePropertyCharacteristicValueDto } from './dto/create-property-characteristic-value.dto';
@@ -24,6 +25,9 @@ import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyCharacteristicsBatchDto } from './dto/create-property-characteristics-batch.dto';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags("Значення характеристики об'єкта нерухомості")
 @Controller('property-characteristic-value')
@@ -32,6 +36,8 @@ export class PropertyCharacteristicValueController {
     private readonly propertyCharacteristicValueService: PropertyCharacteristicValueService,
   ) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -49,6 +55,8 @@ export class PropertyCharacteristicValueController {
     return new CustomApiResponse(response, 'Created', HttpStatus.CREATED);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Post(':property_uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -73,6 +81,8 @@ export class PropertyCharacteristicValueController {
     return new CustomApiResponse(response, 'Created', HttpStatus.CREATED);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     description:
@@ -84,6 +94,9 @@ export class PropertyCharacteristicValueController {
     return this.propertyCharacteristicValueService.findAll();
   }
 
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     description: 'Отримання всіх значень характеристик нерухомості',
@@ -99,6 +112,8 @@ export class PropertyCharacteristicValueController {
     return this.propertyCharacteristicValueService.findOne(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -122,6 +137,8 @@ export class PropertyCharacteristicValueController {
     return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':uuid')
   @SwaggerDelete({
     description:

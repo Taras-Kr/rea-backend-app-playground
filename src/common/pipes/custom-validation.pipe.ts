@@ -111,8 +111,8 @@ export class CustomValidationPipe implements PipeTransform {
     // визначеним декораторами (@IsNotEmpty, @IsUUID, @ValidateNested тощо).
     const errors: ValidationError[] = await validate(object, {
       whitelist: true, // Видаляє властивості, яких немає в DTO.
-      forbidNonWhitelisted: true, // Кидає помилку, якщо вхідні дані містять невідомі властивості.
-      forbidUnknownValues: true, // Забороняє невідомі властивості також і у вкладених об'єктах.
+      forbidNonWhitelisted: false, // Кидає помилку, якщо вхідні дані містять невідомі властивості.
+      forbidUnknownValues: false, // Забороняє невідомі властивості також і у вкладених об'єктах.
     });
 
     // 5. Обробка помилок валідації
