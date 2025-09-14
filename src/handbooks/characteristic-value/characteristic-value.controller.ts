@@ -8,6 +8,7 @@ import {
   Put,
   HttpStatus,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { CharacteristicValueService } from './characteristic-value.service';
 import { CreateCharacteristicValueDto } from './dto/create-characteristic-value.dto';
@@ -23,6 +24,9 @@ import {
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags(
   "Значення характеристик об'єктів нерухомості (для характеристики Вибір із кількох(із списку))",
@@ -33,6 +37,8 @@ export class CharacteristicValueController {
     private readonly characteristicValueService: CharacteristicValueService,
   ) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Post(':property_characteristic_uuid/values')
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -69,6 +75,8 @@ export class CharacteristicValueController {
     return new Response(result, 'Created', HttpStatus.CREATED);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Get(':property_characteristic_uuid/values')
   @SwaggerGet({
     description: "Отримання всіх значень для характеристик об'єкта нерухомості",
@@ -100,6 +108,8 @@ export class CharacteristicValueController {
     return this.characteristicValueService.findAll(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Get(':property_characteristic_uuid/values/:values_uuid')
   @SwaggerGetByUUID({
     description: "Отримати значення характеристики об'єкта нерухомості",
@@ -126,6 +136,8 @@ export class CharacteristicValueController {
     );
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Put(':property_characteristic_uuid/values/:value_uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -155,6 +167,8 @@ export class CharacteristicValueController {
     return new Response(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':property_characteristic_uuid/values/:value_uuid')
   @SwaggerDelete({
     description:

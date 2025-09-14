@@ -1,6 +1,7 @@
 import {
   HttpStatus,
   Injectable,
+  Logger,
   Req,
   Res,
   UnauthorizedException,
@@ -26,6 +27,8 @@ export class AuthService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  private readonly logger = new Logger('AuthService');
+
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOneByEmail(email);
     if (!user) {
@@ -38,34 +41,68 @@ export class AuthService {
     return result;
   }
 
-  async login(data: AuthDto) {
-    const res_user = await this.userService.findOneByEmail(data.email);
-    const tokens = await this.getTokens(res_user);
+  async login(user: User) {
+    const tokens = await this.getTokens(user);
+    const hashedRefreshToken = await argon2.hash(tokens.refresh_token);
+    await this.userRepository.update(user.uuid, {
+      hashed_refresh_token: hashedRefreshToken,
+    });
 
-    const res = {
-      ...res_user,
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
+    const {
+      password: _,
+      hashed_refresh_token: __,
+      ...userWithoutSecrets
+    } = user;
+
+    return {
+      user: userWithoutSecrets,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
     };
-    const { password: _, ...resp } = res;
-    // delete res_user.password;
-    return new CustomApiResponse(resp, 'Logged in', HttpStatus.OK);
   }
 
-  logout(userUUID: string, @Res() response: Response) {
-    response.clearCookie('refresh_token');
-    response.clearCookie('access_token');
-
-    return new CustomApiResponse({ uuid: userUUID }, 'Logged out', HttpStatus.OK);
+  async logout(userUUID: string) {
+    await this.userRepository.update(userUUID, {
+      hashed_refresh_token: null,
+    });
+    return true;
   }
 
-  async refreshTokens(userUuid: string) {
-    const user = await this.userService.findOne(userUuid);
-    if (!user) {
-      throw new UnauthorizedException('Access denied');
+  async refreshTokens(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const user = await this.userRepository.findOne({
+        where: {
+          uuid: payload.sub,
+        },
+        relations: ['type', 'role'],
+      });
+      if (!user || !user.hashed_refresh_token) {
+        this.logger.error('Access denied');
+        throw new UnauthorizedException('Access denied');
+      }
+
+      const isMatch = await argon2.verify(
+        user.hashed_refresh_token,
+        refreshToken,
+      );
+      if (!isMatch) {
+        this.logger.error('Access denied');
+        throw new UnauthorizedException('Access denied');
+      }
+      const tokens = await this.getTokens(user);
+      const hashedRefreshToken = await argon2.hash(tokens.refresh_token);
+      await this.userRepository.update(user.uuid, {
+        hashed_refresh_token: hashedRefreshToken,
+      });
+      return tokens;
+    } catch (error) {
+      this.logger.error(error);
+      throw new UnauthorizedException('Invalid or expired refresh token');
     }
-
-    return await this.getTokens(user);
   }
 
   async getTokens(user: User) {
@@ -127,6 +164,7 @@ export class AuthService {
     if (user) {
       const res = await this.userRepository.findOne({
         where: { uuid: user['sub'] },
+        select:['uuid', 'name', 'surname', 'email', 'role','type'],
         relations: ['type', 'role'],
       });
       const profile = {
