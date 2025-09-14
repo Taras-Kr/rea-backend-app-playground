@@ -1,12 +1,17 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { GeocodingService } from './geocoding.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('geocoding')
 @ApiTags('Геокодування (Геолокація)')
 export class GeocodingController {
   constructor(private readonly geocodingService: GeocodingService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get('coordinates')
   @ApiOperation({
     description:

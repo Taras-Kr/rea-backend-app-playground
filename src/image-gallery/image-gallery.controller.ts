@@ -8,6 +8,7 @@ import {
   Delete,
   HttpStatus,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { ImageGalleryService } from './image-gallery.service';
 import { CreateImageGalleryDto } from './dto/create-image-gallery.dto';
@@ -16,12 +17,17 @@ import { CustomApiResponse } from '../common/dto/api-response.dto';
 import { CustomValidationPipe } from '../common/pipes/custom-validation.pipe';
 import { SwaggerCreate } from '../common/decorators/swagger/common.decorator';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @ApiTags('Галерея зображень')
 @Controller('image-galleries')
 export class ImageGalleryController {
   constructor(private readonly imageGalleryService: ImageGalleryService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -60,6 +66,8 @@ export class ImageGalleryController {
     return this.imageGalleryService.findOne(+id);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -68,6 +76,8 @@ export class ImageGalleryController {
     return this.imageGalleryService.update(+id, updateImageGalleryDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.imageGalleryService.remove(+id);

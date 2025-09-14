@@ -8,6 +8,7 @@ import {
   UsePipes,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
@@ -25,12 +26,17 @@ import {
   SwaggerUpdate,
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags('Довідник валют')
 @Controller('handbooks/currencies')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -44,6 +50,8 @@ export class CurrencyController {
     return this.currencyService.create(createCurrencyDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get('archive')
   @SwaggerGetArchive({
     example200: examples.getArchive200,
@@ -52,6 +60,8 @@ export class CurrencyController {
     return this.currencyService.findDeletedAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     description: 'Отримання всіх не видалених записів про валюти',
@@ -62,6 +72,8 @@ export class CurrencyController {
     return this.currencyService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     description: 'Отримання одного не видаленого запису про валюти',
@@ -77,6 +89,9 @@ export class CurrencyController {
     return this.currencyService.findOne(uuid);
   }
 
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -96,6 +111,8 @@ export class CurrencyController {
     return new CustomApiResponse(res, 'Updated successfully', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':uuid')
   @SwaggerDelete({
     description: "М'яке запису про валюту",
@@ -111,6 +128,8 @@ export class CurrencyController {
     return new CustomApiResponse(res, 'Deleted', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put('archive/:uuid')
   @SwaggerRestore({
     description: 'Поновлення з архіву запису про валюту',

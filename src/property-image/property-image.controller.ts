@@ -10,6 +10,7 @@ import {
   UploadedFile,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyImageService } from './property-image.service';
 import { CreatePropertyImageDto } from './dto/create-property-image.dto';
@@ -24,12 +25,17 @@ import {
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CustomApiResponse } from '../common/dto/api-response.dto';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @ApiTags("Зображення об'єкта нерухомості")
 @Controller('property-images')
 export class PropertyImageController {
   constructor(private readonly propertyImageService: PropertyImageService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Post('property/:property_uuid')
   @UsePipes(new CustomValidationPipe())
   @UseInterceptors(FileInterceptor('file'))
@@ -83,6 +89,8 @@ export class PropertyImageController {
     return this.propertyImageService.findByPropertyUuid(property_uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Put(':uuid')
   @SwaggerUpdate({
     description: 'Оновлення атрибутів зображення',
@@ -104,6 +112,8 @@ export class PropertyImageController {
     return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Delete(':uuid')
   @SwaggerDelete({
     description: 'Жорстке видалення зображення з галереї',

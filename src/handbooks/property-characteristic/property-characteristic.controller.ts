@@ -7,7 +7,7 @@ import {
   Delete,
   UsePipes,
   HttpStatus,
-  Put,
+  Put, UseGuards,
 } from '@nestjs/common';
 import { PropertyCharacteristicService } from './property-characteristic.service';
 import { CreatePropertyCharacteristicDto } from './dto/create-property-characteristic.dto';
@@ -25,6 +25,9 @@ import {
 import * as examples from './swagger/responses.swagger';
 import { CustomValidationPipe } from '../../common/pipes/custom-validation.pipe';
 import { CustomApiResponse } from '../../common/dto/api-response.dto';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('/handbooks/property-characteristics')
 @ApiTags("Довідник характеристик об'єкта нерухомості")
@@ -33,6 +36,8 @@ export class PropertyCharacteristicController {
     private readonly propertyCharacteristicService: PropertyCharacteristicService,
   ) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -51,6 +56,8 @@ export class PropertyCharacteristicController {
     return new CustomApiResponse(result, 'Created', HttpStatus.CREATED);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Get('archive')
   @SwaggerGetArchive({
     example200: examples.getArchive200,
@@ -59,6 +66,8 @@ export class PropertyCharacteristicController {
     return this.propertyCharacteristicService.findDeletedAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     example200: examples.get200,
@@ -67,6 +76,8 @@ export class PropertyCharacteristicController {
     return this.propertyCharacteristicService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     description:
@@ -84,6 +95,8 @@ export class PropertyCharacteristicController {
     return this.propertyCharacteristicService.findOne(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put('archive/:uuid')
   @SwaggerRestore({
     description:
@@ -101,6 +114,8 @@ export class PropertyCharacteristicController {
     return new CustomApiResponse(response, 'Restored', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -124,6 +139,8 @@ export class PropertyCharacteristicController {
     return new CustomApiResponse(response, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':uuid')
   @SwaggerDelete({
     description: 'М`яке видалення запису характеристики нерухомості',

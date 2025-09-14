@@ -118,6 +118,7 @@ export class UserService {
       where: {
         uuid: uuid,
       },
+      relations: ['type', 'role'],
     });
     if (!user) {
       throw new NotFoundException(`User with ${uuid} not found`);

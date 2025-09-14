@@ -7,7 +7,7 @@ import {
   Delete,
   HttpStatus,
   UsePipes,
-  Put,
+  Put, UseGuards,
 } from '@nestjs/common';
 import { PropertyTypeService } from './property-type.service';
 import { CreatePropertyTypeDto } from './dto/create-property-type.dto';
@@ -25,12 +25,17 @@ import {
   SwaggerUpdate,
 } from '../../common/decorators/swagger/common.decorator';
 import * as examples from './swagger/responses.swagger';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags('Довідник типів нерухомості')
 @Controller('handbooks/property-types')
 export class PropertyTypeController {
   constructor(private readonly propertyTypeService: PropertyTypeService) {}
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Post()
   @UsePipes(new CustomValidationPipe())
   @SwaggerCreate({
@@ -53,6 +58,8 @@ export class PropertyTypeController {
     return this.propertyTypeService.findDeletedAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get()
   @SwaggerGet({
     description: 'Отримання всіх не видалених записів про типи нерухомості',
@@ -63,6 +70,8 @@ export class PropertyTypeController {
     return this.propertyTypeService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
   @SwaggerGetByUUID({
     description: 'Отримання не видаленого запису про типи нерухомості',
@@ -78,6 +87,8 @@ export class PropertyTypeController {
     return this.propertyTypeService.findOne(uuid);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put('archive/:uuid')
   @SwaggerRestore()
   @ApiParam({
@@ -90,6 +101,8 @@ export class PropertyTypeController {
     return new CustomApiResponse(response, 'Restored', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Put(':uuid')
   @UsePipes(new CustomValidationPipe())
   @SwaggerUpdate({
@@ -113,6 +126,8 @@ export class PropertyTypeController {
     return new CustomApiResponse(result, 'Updated', HttpStatus.OK);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @Delete(':uuid')
   @SwaggerDelete()
   @ApiParam({

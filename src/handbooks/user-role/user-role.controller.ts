@@ -18,28 +18,31 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { CustomApiResponse } from '../../common/dto/api-response.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 
-@UseGuards(RolesGuard)
 @Controller('/handbooks/user-roles')
 export class UserRoleController {
   constructor(private readonly userRoleService: UserRoleService) {}
 
   @Post()
-  @Roles('owner', 'admin')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserRoleDto: CreateUserRoleDto) {
     const userRole = await this.userRoleService.create(createUserRoleDto);
     return new CustomApiResponse(userRole, 'Created', HttpStatus.CREATED);
   }
 
-  @Roles('owner', 'admin', 'agent')
   @Get('archive')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   findDeletedAll() {
     return this.userRoleService.findDeletedAll();
   }
 
-  @Roles('owner', 'admin', 'agent')
   @Get('by-type')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   findByType(
     @Query('type_uuid') typeUuid?: string,
     @Query('type') type_name?: string,
@@ -48,20 +51,23 @@ export class UserRoleController {
     return this.userRoleService.findByType({ typeUuid, type_name, type_title });
   }
 
-  @Roles('owner', 'admin', 'agent')
   @Get(':uuid')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   findOne(@Param('uuid') uuid: string) {
     return this.userRoleService.findOne(uuid);
   }
 
-  @Roles('owner', 'admin', 'agent')
   @Get()
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin', 'agent')
   findAll() {
     return this.userRoleService.findAll();
   }
 
-  @Roles('owner', 'admin')
   @Put(':uuid')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   @UsePipes(new ValidationPipe())
   async update(
     @Param('uuid') uuid: string,
@@ -71,15 +77,17 @@ export class UserRoleController {
     return new CustomApiResponse(uuid, 'Updated', HttpStatus.OK);
   }
 
-  @Roles('owner', 'admin')
   @Delete(':uuid')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   async remove(@Param('uuid') uuid: string) {
     const resp = await this.userRoleService.softDelete(uuid);
     return new CustomApiResponse(resp, 'Deleted', HttpStatus.OK);
   }
 
-  @Roles('owner', 'admin')
   @Put('archive/:uuid')
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('owner', 'admin')
   async restore(@Param('uuid') uuid: string) {
     const res = await this.userRoleService.restore(uuid);
     return new CustomApiResponse(res, 'Restored', HttpStatus.OK);
